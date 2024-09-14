@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Test</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .question-container {
+            margin-bottom: 20px;
+        }
+
+        .question {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .options input {
+            margin-right: 10px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        .bookmark-container {
+            margin-top: 20px;
+        }
+
+        .bookmark {
+            background-color: #2196F3;
+            color: white;
+            padding: 5px 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .bookmark:hover {
+            background-color: #1e88e5;
+        }
+    .linkedin-btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #000; /* Black background */
+        color: white;
+        text-decoration: none;
+        border-radius: 10px;
+        font-family: Arial, sans-serif;
+        font-weight: bold;
+        position: fixed;
+        bottom: 200px;
+        right: 200px;
+        transition: background-color 0.3s;
+    }
+
+    .linkedin-btn:hover {
+        background-color: #333; /* Dark gray hover effect */
+    }
+</style>
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Online Test</h1>
+        <div id="question-container" class="question-container">
+            <div id="question" class="question"></div>
+            <div id="options" class="options"></div>
+        </div>
+        <div class="buttons">
+            <button id="next-btn" class="btn" onclick="nextQuestion()">Next</button>
+            <button id="bookmark-btn" class="btn" onclick="bookmarkQuestion()">Bookmark</button>
+        </div>
+        <div id="bookmark-container" class="bookmark-container"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Which of the following is not introduced with Java 8?",
+                options: ["Stream API", "Serialization", "Spliterator", "Lambda Expression"],
+                answer: 1
+            },
+            {
+                question: "Which feature of Java 7 allows to not explicitly close IO resource?",
+                options: ["try catch finally", "IOException", "AutoCloseable", "Streams"],
+                answer: 2
+            },
+            {
+                question: "SessionFactory is a thread-safe object.",
+                options: ["True", "False", "Don't know", "False"],
+                answer: 0
+            },
+            {
+                question: "Which is the new method introduced in Java 8 to iterate over a collection?",
+                options: ["for (String i : StringList)", "foreach (String i : StringList)", "StringList.forEach()", "List.for()"],
+                answer: 2
+            },
+            {
+                question: "How to read entire file in one line using java 8?",
+                options: ["Files.readAllLines()", "Files.read()", "Files.readFile()", "Files.lines()"],
+                answer: 0
+            },
+            {
+                question: "What is the substitute of Rhino javascript engine in Java 8?",
+                options: ["Nashorn", "V8", "Inscript", "Narcissus"],
+                answer: 0
+            },
+             {
+                question: "Which of the following is not a feature of Java??",
+                options: ["Object-Oriented", "Platform Independent", " Use of Pointers", "Multithreading"],
+                answer: 2
+            },
+            {
+                question: "Which of the following is not a core interface of Hibernate?",
+                options: ["Configuration", "Criteria", "SessionManagement", "Session"],
+                answer: 2
+            },
+            {
+                question: "What is the default value of a local variable in Java??",
+                options: ["0", "null", "no data type", "no default value"],
+                answer: 3
+            },
+            {
+                question: "Which of the following is not a state of object in Hibernate?",
+                options: ["Attached()", "Detached()", "Persistent()", "Transient()"],
+                answer: 0
+            }
+        ];
+
+        let currentQuestion = 0;
+        let bookmarks = [];
+        let score = 0;
+
+        document.addEventListener("DOMContentLoaded", loadQuestion);
+
+        function loadQuestion() {
+            const questionEl = document.getElementById('question');
+            const optionsEl = document.getElementById('options');
+            const question = questions[currentQuestion];
+
+            questionEl.innerText = `${currentQuestion + 1}. ${question.question}`;
+            optionsEl.innerHTML = '';
+
+            question.options.forEach((option, index) => {
+                optionsEl.innerHTML += `
+                    <label>
+                        <input type="radio" name="option" value="${index}">
+                        ${option}
+                    </label><br>
+                `;
+            });
+        }
+
+        function nextQuestion() {
+            const selectedOption = document.querySelector('input[name="option"]:checked');
+            if (!selectedOption) {
+                alert('Please select an option!');
+                return;
+            }
+
+            const answer = questions[currentQuestion].answer;
+            if (parseInt(selectedOption.value) === answer) {
+                score++;
+            }
+
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function bookmarkQuestion() {
+            if (!bookmarks.includes(currentQuestion)) {
+                bookmarks.push(currentQuestion);
+                const bookmarkContainer = document.getElementById('bookmark-container');
+                const bookmark = document.createElement('div');
+                bookmark.className = 'bookmark';
+                bookmark.innerText = `Bookmark ${bookmarks.length}`;
+                bookmark.onclick = () => loadBookmarkedQuestion(currentQuestion);
+                bookmarkContainer.appendChild(bookmark);
+            }
+        }
+
+        function loadBookmarkedQuestion(bookmarkedQuestionIndex) {
+            currentQuestion = bookmarkedQuestionIndex;
+            loadQuestion();
+        }
+
+        function showResult() {
+            const questionEl = document.getElementById('question');
+            const optionsEl = document.getElementById('options');
+            const bookmarkContainer = document.getElementById('bookmark-container');
+            const nextBtn = document.getElementById('next-btn');
+            const bookmarkBtn = document.getElementById('bookmark-btn');
+
+            questionEl.innerText = `You scored ${score} out of ${questions.length}`;
+            optionsEl.innerHTML = '';
+            bookmarkContainer.innerHTML = '';
+            nextBtn.style.display = 'none';
+            bookmarkBtn.style.display = 'none';
+        }
+    </script>
+<a href="https://www.linkedin.com/in/charan-kolli-4263b6249/" target="_blank" class="linkedin-btn">
+    CHARAN'S PROFILE
+</a>
+
+
+
+</body>
+</html>
